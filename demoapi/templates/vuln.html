@@ -2,11 +2,15 @@
 <html lang="en">
 
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=PT+Mono&family=Roboto+Condensed&display=swap');
+   
+body {
+    background-color: white;
+    color: black;
+}
 
 .container {
     font-family: 'PT Mono', monospace;
-    }
+}
 
 .content {
     border-collapse: collapse;
@@ -15,13 +19,13 @@
     min-width: 500px;
     border-radius: 5px 5px 0 0;
     overflow: hidden;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+   
     border-bottom-style:none;
 }
 
 .content thead tr {
-    background-color: #009879;
-    color: white;
+    background-color: #000000;
+    color: #ffffff;
     text-align: left;
     font-weight: bold;
 }
@@ -31,17 +35,32 @@
     padding: 12px 15px;
 }
 
+.content th:last-child, .content td:last-child {
+    width: 10%;
+}
+
 .content tbody tr {
-    border-bottom: 1px solid #dddddd;
+    border-bottom: 1px solid #000000;
+    background-color: #ffffff;
+    color: #000000;
 }
 
-.content tbody tr:nth-of-type(even) {
-    background-color: #f3f3f3;
+.content tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+    color: #000000;
 }
 
-.content tbody tr:last-of-type {
-    background-color: #009879;
-    color: white;
+.content tbody tr:hover {
+    background-color: #cccccc;
+}
+
+@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
+  .content {
+    display: block;
+  }
+  .table-responsive {
+    overflow-x: auto;
+  }
 }
 
 .table-responsive {
@@ -50,7 +69,6 @@
 
 .pagination {
     margin-top: 20px;
-    
 }
 
 .pagination .btn {
@@ -64,10 +82,17 @@
     font-weight: bold;
 }
 
-/* Hover effect */
-.content tbody tr:hover {
-    background-color: #e0e0e0;
-    cursor: pointer;
+.btn-outline-primary{
+    color: #ffffff;
+}
+
+
+.current-page{
+    color: #ffffff;
+}
+
+.pagination .btn {
+    color: black;
 }
 
 </style>
@@ -87,8 +112,11 @@
                     <tr>
                         <th><center>CVE ID</center></th>
                         <th><center>Date Recorded</center></th>
+                        <th><center>Vendor</center></th>
+                        <th><center>Vendor Product</center></th>
+                        <th><center>Vulnerability Name</center></th>
                         <th><center>Vulnerability Description</center></th>
-                        <th><center>Severity</center></th>
+                        <th><center>References</center></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -97,8 +125,11 @@
                     <tr>
                         <td><center>{{i.ID}}</center></td>
                         <td><center>{{i.DATES}}</center></td>
+                        <td><center>{{i.VENDOR}}</center></td>
+                        <td><center>{{i.PRODUCT}}</center></td>
+                        <td><center>{{i.VULNAME}}</center></td>
                         <td><center>{{i.DESC}}</center></td>
-                        <td><center>{{i.SEVERITY}}</center></td>
+                        <td><center><a href="{{i.REF}}" target="_blank">{{i.REF}}</a></center></td>
                     </tr>
                     {% endfor %}
                     {% endif %}

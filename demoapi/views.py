@@ -7,9 +7,8 @@ from django.core.paginator import Paginator
 
 def cves(req):
     try:
-        response = requests.get("https://plasticuproject.pythonanywhere.com/nvd-api/v1/recent")
-        vulns = response.json()
-    
+        response = requests.get('https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json')
+            
     except AttributeError:
         pass
         
@@ -17,25 +16,35 @@ def cves(req):
     jd = json.loads(response.text)
 
     # Initialize empty lists
-    id_list = []
-    last_modified_date_list = []
-    desc_value_list = []
-    severity_list = []
+    cveID_list = []
+    vendorProject_list = []
+    product_list = []
+    dateAdded_list = []
+    vulnerabilityName_list = []
+    shortDescription_list = []
+    ref_list = []
 
     # Iterate over the list of dictionaries
-    for entry in jd:
-        # Extract values and append them to respective lists
-        id_list.append(entry["cve"]["CVE_data_meta"]["ID"])
-        last_modified_date_list.append(entry["lastModifiedDate"])
-        desc_value_list.append(entry["cve"]["description"]["description_data"][0]["value"])
+    # Extract the desired values from the 'vulnerabilities' array
+    for item in jd['vulnerabilities']:
+        cveID_list.append(item['cveID'])
+        vendorProject_list.append(item['vendorProject'])
+        product_list.append(item['product'])
+        dateAdded_list.append(item['dateAdded'])
+        vulnerabilityName_list.append(item['vulnerabilityName'])
+        shortDescription_list.append(item['shortDescription'])
+        ref_list.append(item['notes'])
         
-        impact = entry.get('impact',{})
-        
-        severity = impact.get('baseMetricV3', {}).get('cvssV3', {}).get('baseSeverity', 'severity level not available')
-        
-        severity_list.append(severity)
+    rcve = cveID_list[::-1]
+    rdate = dateAdded_list[::-1]
+    rvendr = vendorProject_list[::-1]
+    rprod = product_list[::-1]
+    rvname = vulnerabilityName_list[::-1]
+    rdesc = shortDescription_list[::-1]
+    rref = ref_list[::-1]
+    
 
-    info = {'ID':id_list,'DATES':last_modified_date_list,'DESC':desc_value_list,'SEVERITY':severity_list}
+    info = {'ID':rcve,'DATES':rdate,'VENDOR':rvendr,'PRODUCT':rprod,'VULNAME':rvname,'DESC':rdesc,'REF':rref}
     
     df = pd.DataFrame.from_dict(info)
     
